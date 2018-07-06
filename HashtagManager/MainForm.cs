@@ -18,11 +18,13 @@ namespace HashtagManager
         private FileInfo[] files;
 
         private string CurrentFilePath { get; set; }
-        private List<string> HashTags { get; set; }
-
+        
         public MainForm()
         {
             InitializeComponent();
+
+            CatSelectorManage.CategoryChanged += HandleManagerCategoryChanged;
+            CatSelectorGen.CategoryChanged += HandleGenCategoryChanged;
 
             // Load default file path from config file
             CurrentFilePath = ConfigurationManager.AppSettings["saveDirectory"];
@@ -30,29 +32,22 @@ namespace HashtagManager
             if (!string.IsNullOrWhiteSpace(CurrentFilePath))
             {
                 this.files = DataLoader.LoadFilesFromDirectory(CurrentFilePath);
+
+                if(files.Length > 0)
+                {
+                    selectedDirectoryLabel.Text = CurrentFilePath;    
+                    
+                    CatSelectorGen.PopulateCategories(files);
+                    CatSelectorManage.PopulateCategories(files);
+
+                    btnGenerateTags.Enabled = true;
+                }             
             }
-
-        }
-
-        private void BtnSelectFile_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog();
-
-            if (dialog.ShowDialog() == DialogResult.OK)
-            {
-                string fileName = dialog.FileName;
-                CurrentFilePath = fileName;
-                lblFilePath.Text = fileName;
-                LoadTagsFromFile(fileName);
-                lblMaximumTags.Text = "(Maximum " + HashTags.Count.ToString() + ")";
-            }
-
-            btnGenerateTags.Enabled = true;
         }
 
         private void BtnGenerateTags_Click(object sender, EventArgs e)
         {
-            txtResultTags.Clear();
+            resultTextBox.Clear();
 
             int numTags = 0;
 
@@ -60,16 +55,24 @@ namespace HashtagManager
             {
                 numTags = Convert.ToInt32(txtNumTags.Text);
             }
-            catch
+            catch (System.FormatException ex)
             {
                 MessageBox.Show("Enter a valid number");
                 return;
             }
 
+            List<string> HashTags = DataLoader.LoadTagsFromFile(CatSelectorGen.SelectedValue.FullName);
+
             if (numTags <= HashTags.Count && numTags > 0)
             {
-                var numbers = SelectRandomTags(numTags);
-                PopulateResults(numbers);
+                HashSet<int> numbers = SelectRandomIndexes(numTags, HashTags.Count);
+
+                foreach (int i in numbers)
+                {
+                    resultTextBox.AppendText(HashTags[i]);
+                    resultTextBox.AppendText(" ");
+                    resultTextBox.AppendText("\n");
+                }
             }
             else
             {
@@ -78,48 +81,27 @@ namespace HashtagManager
             }
         }
 
-        private HashSet<int> SelectRandomTags(int numTags)
+        private HashSet<int> SelectRandomIndexes(int numTags, int availableTags)
         {
             Random rand = new Random();
 
             HashSet<int> numbers = new HashSet<int>();
+
             while (numbers.Count < numTags)
             {
-                numbers.Add(rand.Next(0, HashTags.Count));
+                numbers.Add(rand.Next(0, availableTags));
             }
 
             return numbers;
         }
-
-        private void LoadTagsFromFile(string fileName)
-        {
-            HashTags = new List<string>();
-            StreamReader reader = new StreamReader(fileName);
-            string line;
-
-            while ((line = reader.ReadLine()) != null)
-            {
-                HashTags.Add(line);
-            }
-        }
-
+       
         private void BtnCopy_Click(object sender, EventArgs e)
         {
-            if (txtResultTags.TextLength > 0)
+            if (resultTextBox.TextLength > 0)
             {
                 Clipboard.Clear();
-                Clipboard.SetText(txtResultTags.Text);
+                Clipboard.SetText(resultTextBox.Text);
                 lblClipboardConfirm.Text = "Copied to clipboard";
-            }
-        }
-
-        private void PopulateResults(HashSet<int> numbers)
-        {
-            foreach (int i in numbers)
-            {
-                txtResultTags.AppendText(HashTags[i]);
-                txtResultTags.AppendText(" ");
-                txtResultTags.AppendText("\n");
             }
         }
 
@@ -134,30 +116,27 @@ namespace HashtagManager
                     this.files = DataLoader.LoadFilesFromDirectory(fbd.SelectedPath);
                     selectedDirectoryLabel.Text = fbd.SelectedPath;
 
-                    categorySelector.DataSource = files;
+                    CatSelectorManage.PopulateCategories(files);
+
+                    CatSelectorGen.PopulateCategories(files);
+                    CatSelectorManage.PopulateCategories(files);
                 }
             }
         }
 
         private void SaveDirDefaultButton_Click(object sender, EventArgs e)
         {
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
             config.AppSettings.Settings["saveDirectory"].Value = selectedDirectoryLabel.Text;
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection(config.AppSettings.SectionInformation.Name);
         }
 
-        private void CategorySelector_SelectedValueChanged(object sender, EventArgs e)
+        private void PopulateEditTextbox(string filePath)
         {
-            PopulateEditTextbox();
-        }
+            editorTextBox.Clear();
 
-        private void PopulateEditTextbox()
-        {
-            FileInfo file = categorySelector.SelectedValue as FileInfo;
-            string fullPath = file.FullName;
-
-            LoadTagsFromFile(fullPath);
+            List<string> HashTags = DataLoader.LoadTagsFromFile(filePath);
 
             foreach (string tag in HashTags)
             {
@@ -165,6 +144,17 @@ namespace HashtagManager
                 editorTextBox.AppendText(" ");
                 editorTextBox.AppendText("\n");
             }
+        }
+
+        private void HandleManagerCategoryChanged(object sender, CategoryChangedEventArgs args)
+        {
+            PopulateEditTextbox(args.NewCategory.FullName);
+        }
+
+        private void HandleGenCategoryChanged (object sender, CategoryChangedEventArgs args)
+        {
+            List<string> HashTags = DataLoader.LoadTagsFromFile(CatSelectorGen.SelectedValue.FullName);
+            lblMaximumTags.Text = "(Maximum " + HashTags.Count.ToString() + ")";
         }
     }
 }

@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnSelectFile = new System.Windows.Forms.Button();
-            this.lblFilePath = new System.Windows.Forms.Label();
-            this.txtResultTags = new System.Windows.Forms.TextBox();
+            this.resultTextBox = new System.Windows.Forms.TextBox();
             this.btnCopy = new System.Windows.Forms.Button();
             this.btnGenerateTags = new System.Windows.Forms.Button();
             this.txtNumTags = new System.Windows.Forms.TextBox();
@@ -50,47 +48,28 @@
             this.editorTextBox = new System.Windows.Forms.TextBox();
             this.removeCategoryButton = new System.Windows.Forms.Button();
             this.addCategoryButton = new System.Windows.Forms.Button();
-            this.categoryLabel = new System.Windows.Forms.Label();
-            this.categorySelector = new System.Windows.Forms.ComboBox();
+            this.CatSelectorGen = new HashtagManager.CategorySelector();
+            this.CatSelectorManage = new HashtagManager.CategorySelector();
             this.tabControl1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnSelectFile
+            // resultTextBox
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(23, 34);
-            this.btnSelectFile.Name = "btnSelectFile";
-            this.btnSelectFile.Size = new System.Drawing.Size(75, 23);
-            this.btnSelectFile.TabIndex = 0;
-            this.btnSelectFile.Text = "Select File";
-            this.btnSelectFile.UseVisualStyleBackColor = true;
-            this.btnSelectFile.Click += new System.EventHandler(this.BtnSelectFile_Click);
-            // 
-            // lblFilePath
-            // 
-            this.lblFilePath.AutoSize = true;
-            this.lblFilePath.Location = new System.Drawing.Point(113, 39);
-            this.lblFilePath.Name = "lblFilePath";
-            this.lblFilePath.Size = new System.Drawing.Size(10, 13);
-            this.lblFilePath.TabIndex = 1;
-            this.lblFilePath.Text = "-";
-            // 
-            // txtResultTags
-            // 
-            this.txtResultTags.Location = new System.Drawing.Point(23, 105);
-            this.txtResultTags.Multiline = true;
-            this.txtResultTags.Name = "txtResultTags";
-            this.txtResultTags.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtResultTags.Size = new System.Drawing.Size(374, 222);
-            this.txtResultTags.TabIndex = 2;
+            this.resultTextBox.Location = new System.Drawing.Point(9, 87);
+            this.resultTextBox.Multiline = true;
+            this.resultTextBox.Name = "resultTextBox";
+            this.resultTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.resultTextBox.Size = new System.Drawing.Size(407, 292);
+            this.resultTextBox.TabIndex = 2;
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(274, 348);
+            this.btnCopy.Location = new System.Drawing.Point(306, 396);
             this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(123, 23);
+            this.btnCopy.Size = new System.Drawing.Size(109, 23);
             this.btnCopy.TabIndex = 3;
             this.btnCopy.Text = "Copy To Clipboard";
             this.btnCopy.UseVisualStyleBackColor = true;
@@ -99,7 +78,7 @@
             // btnGenerateTags
             // 
             this.btnGenerateTags.Enabled = false;
-            this.btnGenerateTags.Location = new System.Drawing.Point(322, 76);
+            this.btnGenerateTags.Location = new System.Drawing.Point(314, 10);
             this.btnGenerateTags.Name = "btnGenerateTags";
             this.btnGenerateTags.Size = new System.Drawing.Size(75, 23);
             this.btnGenerateTags.TabIndex = 4;
@@ -109,7 +88,7 @@
             // 
             // txtNumTags
             // 
-            this.txtNumTags.Location = new System.Drawing.Point(168, 79);
+            this.txtNumTags.Location = new System.Drawing.Point(161, 53);
             this.txtNumTags.Name = "txtNumTags";
             this.txtNumTags.Size = new System.Drawing.Size(29, 20);
             this.txtNumTags.TabIndex = 5;
@@ -117,7 +96,7 @@
             // lblNumTags
             // 
             this.lblNumTags.AutoSize = true;
-            this.lblNumTags.Location = new System.Drawing.Point(23, 81);
+            this.lblNumTags.Location = new System.Drawing.Point(16, 55);
             this.lblNumTags.Name = "lblNumTags";
             this.lblNumTags.Size = new System.Drawing.Size(139, 13);
             this.lblNumTags.TabIndex = 6;
@@ -126,7 +105,7 @@
             // lblClipboardConfirm
             // 
             this.lblClipboardConfirm.AutoSize = true;
-            this.lblClipboardConfirm.Location = new System.Drawing.Point(274, 378);
+            this.lblClipboardConfirm.Location = new System.Drawing.Point(274, 349);
             this.lblClipboardConfirm.Name = "lblClipboardConfirm";
             this.lblClipboardConfirm.Size = new System.Drawing.Size(0, 13);
             this.lblClipboardConfirm.TabIndex = 8;
@@ -134,7 +113,7 @@
             // lblMaximumTags
             // 
             this.lblMaximumTags.AutoSize = true;
-            this.lblMaximumTags.Location = new System.Drawing.Point(212, 82);
+            this.lblMaximumTags.Location = new System.Drawing.Point(205, 56);
             this.lblMaximumTags.Name = "lblMaximumTags";
             this.lblMaximumTags.Size = new System.Drawing.Size(0, 13);
             this.lblMaximumTags.TabIndex = 9;
@@ -181,11 +160,10 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.txtResultTags);
+            this.tabPage3.Controls.Add(this.CatSelectorGen);
+            this.tabPage3.Controls.Add(this.resultTextBox);
             this.tabPage3.Controls.Add(this.tabControl1);
-            this.tabPage3.Controls.Add(this.btnSelectFile);
             this.tabPage3.Controls.Add(this.lblMaximumTags);
-            this.tabPage3.Controls.Add(this.lblFilePath);
             this.tabPage3.Controls.Add(this.lblClipboardConfirm);
             this.tabPage3.Controls.Add(this.btnCopy);
             this.tabPage3.Controls.Add(this.lblNumTags);
@@ -201,6 +179,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.CatSelectorManage);
             this.tabPage4.Controls.Add(this.SaveDirDefaultButton);
             this.tabPage4.Controls.Add(this.selectedDirectoryLabel);
             this.tabPage4.Controls.Add(this.selectDirectoryButton);
@@ -208,8 +187,6 @@
             this.tabPage4.Controls.Add(this.editorTextBox);
             this.tabPage4.Controls.Add(this.removeCategoryButton);
             this.tabPage4.Controls.Add(this.addCategoryButton);
-            this.tabPage4.Controls.Add(this.categoryLabel);
-            this.tabPage4.Controls.Add(this.categorySelector);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
@@ -220,7 +197,7 @@
             // 
             // SaveDirDefaultButton
             // 
-            this.SaveDirDefaultButton.Location = new System.Drawing.Point(233, 10);
+            this.SaveDirDefaultButton.Location = new System.Drawing.Point(314, 10);
             this.SaveDirDefaultButton.Name = "SaveDirDefaultButton";
             this.SaveDirDefaultButton.Size = new System.Drawing.Size(98, 23);
             this.SaveDirDefaultButton.TabIndex = 8;
@@ -267,7 +244,7 @@
             // 
             // removeCategoryButton
             // 
-            this.removeCategoryButton.Location = new System.Drawing.Point(264, 45);
+            this.removeCategoryButton.Location = new System.Drawing.Point(280, 45);
             this.removeCategoryButton.Name = "removeCategoryButton";
             this.removeCategoryButton.Size = new System.Drawing.Size(25, 25);
             this.removeCategoryButton.TabIndex = 3;
@@ -276,30 +253,26 @@
             // 
             // addCategoryButton
             // 
-            this.addCategoryButton.Location = new System.Drawing.Point(233, 45);
+            this.addCategoryButton.Location = new System.Drawing.Point(249, 45);
             this.addCategoryButton.Name = "addCategoryButton";
             this.addCategoryButton.Size = new System.Drawing.Size(25, 25);
             this.addCategoryButton.TabIndex = 2;
             this.addCategoryButton.Text = "+";
             this.addCategoryButton.UseVisualStyleBackColor = true;
             // 
-            // categoryLabel
+            // CatSelectorGen
             // 
-            this.categoryLabel.AutoSize = true;
-            this.categoryLabel.Location = new System.Drawing.Point(6, 51);
-            this.categoryLabel.Name = "categoryLabel";
-            this.categoryLabel.Size = new System.Drawing.Size(94, 13);
-            this.categoryLabel.TabIndex = 1;
-            this.categoryLabel.Text = "Select a Category:";
+            this.CatSelectorGen.Location = new System.Drawing.Point(9, 10);
+            this.CatSelectorGen.Name = "CatSelectorGen";
+            this.CatSelectorGen.Size = new System.Drawing.Size(233, 37);
+            this.CatSelectorGen.TabIndex = 11;
             // 
-            // categorySelector
+            // CatSelectorManage
             // 
-            this.categorySelector.FormattingEnabled = true;
-            this.categorySelector.Location = new System.Drawing.Point(106, 48);
-            this.categorySelector.Name = "categorySelector";
-            this.categorySelector.Size = new System.Drawing.Size(121, 21);
-            this.categorySelector.TabIndex = 0;
-            this.categorySelector.SelectedValueChanged += new System.EventHandler(this.CategorySelector_SelectedValueChanged);
+            this.CatSelectorManage.Location = new System.Drawing.Point(9, 39);
+            this.CatSelectorManage.Name = "CatSelectorManage";
+            this.CatSelectorManage.Size = new System.Drawing.Size(234, 37);
+            this.CatSelectorManage.TabIndex = 9;
             // 
             // MainForm
             // 
@@ -320,10 +293,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnSelectFile;
-        private System.Windows.Forms.Label lblFilePath;
-        private System.Windows.Forms.TextBox txtResultTags;
+        private System.Windows.Forms.TextBox resultTextBox;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.Button btnGenerateTags;
         private System.Windows.Forms.TextBox txtNumTags;
@@ -339,12 +309,12 @@
         private System.Windows.Forms.TextBox editorTextBox;
         private System.Windows.Forms.Button removeCategoryButton;
         private System.Windows.Forms.Button addCategoryButton;
-        private System.Windows.Forms.Label categoryLabel;
-        private System.Windows.Forms.ComboBox categorySelector;
         private System.Windows.Forms.Button saveChangesButton;
         private System.Windows.Forms.Label selectedDirectoryLabel;
         private System.Windows.Forms.Button selectDirectoryButton;
         private System.Windows.Forms.Button SaveDirDefaultButton;
+        private CategorySelector CatSelectorGen;
+        private CategorySelector CatSelectorManage;
     }
 }
 
