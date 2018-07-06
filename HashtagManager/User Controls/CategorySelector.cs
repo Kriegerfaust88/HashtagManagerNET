@@ -42,6 +42,18 @@ namespace HashtagManager
         {
             RaiseCategoryChanged(CategoryCombo.SelectedValue as FileInfo);
         }
+
+        public void ResetCombo()
+        {
+            if (this.CategoryCombo.Items.Count > 0)
+            {
+                this.CategoryCombo.SelectedIndex = 0;
+            }
+            else
+            {
+                this.CategoryCombo.ResetText();
+            }
+        }
     }
 
     public class CategoryChangedEventArgs : EventArgs

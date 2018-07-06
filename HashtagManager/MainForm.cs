@@ -18,7 +18,7 @@ namespace HashtagManager
         private FileInfo[] files;
 
         private string CurrentFilePath { get; set; }
-        
+
         public MainForm()
         {
             InitializeComponent();
@@ -33,15 +33,19 @@ namespace HashtagManager
             {
                 this.files = DataLoader.LoadFilesFromDirectory(CurrentFilePath);
 
-                if(files.Length > 0)
+                if (this.files.Length > 0)
                 {
-                    selectedDirectoryLabel.Text = CurrentFilePath;    
-                    
-                    CatSelectorGen.PopulateCategories(files);
-                    CatSelectorManage.PopulateCategories(files);
+                    selectedDirectoryLabel.Text = CurrentFilePath;
+
+                    CatSelectorGen.PopulateCategories(this.files);
+                    CatSelectorManage.PopulateCategories(this.files);
 
                     btnGenerateTags.Enabled = true;
-                }             
+                }
+                else
+                {
+                    MessageBox.Show("No .txt files found in this directory.");
+                }
             }
         }
 
@@ -94,7 +98,7 @@ namespace HashtagManager
 
             return numbers;
         }
-       
+
         private void BtnCopy_Click(object sender, EventArgs e)
         {
             if (resultTextBox.TextLength > 0)
@@ -114,12 +118,21 @@ namespace HashtagManager
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
                     this.files = DataLoader.LoadFilesFromDirectory(fbd.SelectedPath);
-                    selectedDirectoryLabel.Text = fbd.SelectedPath;
 
-                    CatSelectorManage.PopulateCategories(files);
+                    if (this.files.Length > 0)
+                    {
+                        selectedDirectoryLabel.Text = fbd.SelectedPath;
 
-                    CatSelectorGen.PopulateCategories(files);
-                    CatSelectorManage.PopulateCategories(files);
+                        CatSelectorGen.PopulateCategories(this.files);
+                        CatSelectorManage.PopulateCategories(this.files);
+
+                        CatSelectorGen.ResetCombo();
+                        CatSelectorManage.ResetCombo();
+                    }
+                    else
+                    {
+                        MessageBox.Show("No .txt files found in this directory.");
+                    }
                 }
             }
         }
@@ -151,7 +164,7 @@ namespace HashtagManager
             PopulateEditTextbox(args.NewCategory.FullName);
         }
 
-        private void HandleGenCategoryChanged (object sender, CategoryChangedEventArgs args)
+        private void HandleGenCategoryChanged(object sender, CategoryChangedEventArgs args)
         {
             List<string> HashTags = DataLoader.LoadTagsFromFile(CatSelectorGen.SelectedValue.FullName);
             lblMaximumTags.Text = "(Maximum " + HashTags.Count.ToString() + ")";

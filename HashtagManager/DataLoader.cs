@@ -12,7 +12,7 @@ namespace HashtagManager
         public static FileInfo[] LoadFilesFromDirectory(string path)
         {
             DirectoryInfo info = new DirectoryInfo(path);
-            return info.GetFiles();
+            return info.GetFiles("*.txt");
         }
 
         public static List<string> LoadTagsFromFile(string fileName)
