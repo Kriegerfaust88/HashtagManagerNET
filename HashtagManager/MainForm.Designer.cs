@@ -40,7 +40,9 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.CatSelectorGen = new HashtagManager.CategorySelector();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.CatSelectorManage = new HashtagManager.CategorySelector();
             this.SaveDirDefaultButton = new System.Windows.Forms.Button();
             this.selectedDirectoryLabel = new System.Windows.Forms.Label();
             this.selectDirectoryButton = new System.Windows.Forms.Button();
@@ -48,8 +50,6 @@
             this.editorTextBox = new System.Windows.Forms.TextBox();
             this.removeCategoryButton = new System.Windows.Forms.Button();
             this.addCategoryButton = new System.Windows.Forms.Button();
-            this.CatSelectorGen = new HashtagManager.CategorySelector();
-            this.CatSelectorManage = new HashtagManager.CategorySelector();
             this.tabControl1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
@@ -67,7 +67,7 @@
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(306, 396);
+            this.btnCopy.Location = new System.Drawing.Point(307, 399);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(109, 23);
             this.btnCopy.TabIndex = 3;
@@ -122,7 +122,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(417, 395);
+            this.tabControl1.Location = new System.Drawing.Point(411, 428);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(8, 8);
@@ -155,7 +155,7 @@
             this.tabControl2.Location = new System.Drawing.Point(12, 12);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(430, 465);
+            this.tabControl2.Size = new System.Drawing.Size(430, 462);
             this.tabControl2.TabIndex = 11;
             // 
             // tabPage3
@@ -172,10 +172,17 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(422, 439);
+            this.tabPage3.Size = new System.Drawing.Size(422, 436);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Generate Random";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // CatSelectorGen
+            // 
+            this.CatSelectorGen.Location = new System.Drawing.Point(9, 10);
+            this.CatSelectorGen.Name = "CatSelectorGen";
+            this.CatSelectorGen.Size = new System.Drawing.Size(233, 37);
+            this.CatSelectorGen.TabIndex = 11;
             // 
             // tabPage4
             // 
@@ -190,10 +197,17 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(422, 439);
+            this.tabPage4.Size = new System.Drawing.Size(422, 436);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Manage";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // CatSelectorManage
+            // 
+            this.CatSelectorManage.Location = new System.Drawing.Point(9, 39);
+            this.CatSelectorManage.Name = "CatSelectorManage";
+            this.CatSelectorManage.Size = new System.Drawing.Size(234, 37);
+            this.CatSelectorManage.TabIndex = 9;
             // 
             // SaveDirDefaultButton
             // 
@@ -259,20 +273,7 @@
             this.addCategoryButton.TabIndex = 2;
             this.addCategoryButton.Text = "+";
             this.addCategoryButton.UseVisualStyleBackColor = true;
-            // 
-            // CatSelectorGen
-            // 
-            this.CatSelectorGen.Location = new System.Drawing.Point(9, 10);
-            this.CatSelectorGen.Name = "CatSelectorGen";
-            this.CatSelectorGen.Size = new System.Drawing.Size(233, 37);
-            this.CatSelectorGen.TabIndex = 11;
-            // 
-            // CatSelectorManage
-            // 
-            this.CatSelectorManage.Location = new System.Drawing.Point(9, 39);
-            this.CatSelectorManage.Name = "CatSelectorManage";
-            this.CatSelectorManage.Size = new System.Drawing.Size(234, 37);
-            this.CatSelectorManage.TabIndex = 9;
+            this.addCategoryButton.Click += new System.EventHandler(this.addCategoryButton_Click);
             // 
             // MainForm
             // 

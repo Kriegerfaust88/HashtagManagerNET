@@ -128,6 +128,8 @@ namespace HashtagManager
 
                         CatSelectorGen.ResetCombo();
                         CatSelectorManage.ResetCombo();
+
+                        this.CurrentFilePath = fbd.SelectedPath;
                     }
                     else
                     {
@@ -168,6 +170,49 @@ namespace HashtagManager
         {
             List<string> HashTags = DataLoader.LoadTagsFromFile(CatSelectorGen.SelectedValue.FullName);
             lblMaximumTags.Text = "(Maximum " + HashTags.Count.ToString() + ")";
+        }
+
+        private void addCategoryButton_Click(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(this.CurrentFilePath))
+            {
+                CreateNewFile();
+            }
+        }
+
+        private void CreateNewFile()
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+
+            saveDialog.Filter = "Text files (*.txt)|*.txt";
+            saveDialog.FilterIndex = 1;
+            saveDialog.RestoreDirectory = true;
+
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                using(FileStream fs = File.Create(saveDialog.FileName))
+                {
+                    Byte[] info = new UTF8Encoding(true).GetBytes("Write your new hashtags here, separated by a line break");
+                    fs.Write(info, 0, info.Length);
+                }
+                //TODO Use CurrentFilePath instead
+                RefreshComboBoxes(saveDialog.InitialDirectory);
+            }
+        }
+
+        private void RefreshComboBoxes(string directory)
+        {
+            this.files = DataLoader.LoadFilesFromDirectory(directory);
+
+            if (this.files.Length > 0)
+            {                 selectedDirectoryLabel.Text = directory;
+
+                CatSelectorGen.PopulateCategories(this.files);
+                CatSelectorManage.PopulateCategories(this.files);
+
+                CatSelectorGen.ResetCombo();
+                CatSelectorManage.ResetCombo();       
+            }
         }
     }
 }

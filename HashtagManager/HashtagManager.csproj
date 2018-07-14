@@ -61,6 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewFileDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewFileDialog.Designer.cs">
+      <DependentUpon>NewFileDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="User Controls\CategorySelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -76,6 +82,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="NewFileDialog.resx">
+      <DependentUpon>NewFileDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="User Controls\CategorySelector.resx">
       <DependentUpon>CategorySelector.cs</DependentUpon>
     </EmbeddedResource>
