@@ -18,12 +18,14 @@ namespace HashtagManager
         public static List<string> LoadTagsFromFile(string fileName)
         {
             List<string> HashTags = new List<string>();
-            StreamReader reader = new StreamReader(fileName);
-            string line;
 
-            while ((line = reader.ReadLine()) != null)
+            using (StreamReader reader = new StreamReader(fileName))
             {
-                HashTags.Add(line);
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    HashTags.Add(line);
+                }
             }
 
             return HashTags;

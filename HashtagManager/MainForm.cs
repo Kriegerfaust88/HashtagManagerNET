@@ -35,11 +35,7 @@ namespace HashtagManager
 
                 if (this.files.Length > 0)
                 {
-                    selectedDirectoryLabel.Text = CurrentFilePath;
-
-                    CatSelectorGen.PopulateCategories(this.files);
-                    CatSelectorManage.PopulateCategories(this.files);
-
+                    RefreshComboBoxes();
                     btnGenerateTags.Enabled = true;
                 }
                 else
@@ -111,6 +107,7 @@ namespace HashtagManager
 
         private void SelectDirectoryButton_Click(object sender, EventArgs e)
         {
+            // Open a new folder browser dialog
             using (var fbd = new FolderBrowserDialog())
             {
                 DialogResult result = fbd.ShowDialog();
@@ -121,14 +118,7 @@ namespace HashtagManager
 
                     if (this.files.Length > 0)
                     {
-                        selectedDirectoryLabel.Text = fbd.SelectedPath;
-
-                        CatSelectorGen.PopulateCategories(this.files);
-                        CatSelectorManage.PopulateCategories(this.files);
-
-                        CatSelectorGen.ResetCombo();
-                        CatSelectorManage.ResetCombo();
-
+                        RefreshComboBoxes();
                         this.CurrentFilePath = fbd.SelectedPath;
                     }
                     else
@@ -163,16 +153,22 @@ namespace HashtagManager
 
         private void HandleManagerCategoryChanged(object sender, CategoryChangedEventArgs args)
         {
-            PopulateEditTextbox(args.NewCategory.FullName);
+            if (args.NewCategory != null)
+            {
+                PopulateEditTextbox(args.NewCategory.FullName);
+            }
         }
 
         private void HandleGenCategoryChanged(object sender, CategoryChangedEventArgs args)
         {
-            List<string> HashTags = DataLoader.LoadTagsFromFile(CatSelectorGen.SelectedValue.FullName);
-            lblMaximumTags.Text = "(Maximum " + HashTags.Count.ToString() + ")";
+            if (CatSelectorGen.SelectedValue != null)
+            {
+                List<string> HashTags = DataLoader.LoadTagsFromFile(CatSelectorGen.SelectedValue.FullName);
+                lblMaximumTags.Text = "(Maximum " + HashTags.Count.ToString() + ")";
+            }
         }
 
-        private void addCategoryButton_Click(object sender, EventArgs e)
+        private void AddCategoryButton_Click(object sender, EventArgs e)
         {
             if (!String.IsNullOrEmpty(this.CurrentFilePath))
             {
@@ -182,37 +178,106 @@ namespace HashtagManager
 
         private void CreateNewFile()
         {
-            SaveFileDialog saveDialog = new SaveFileDialog();
-
-            saveDialog.Filter = "Text files (*.txt)|*.txt";
-            saveDialog.FilterIndex = 1;
-            saveDialog.RestoreDirectory = true;
-
-            if (saveDialog.ShowDialog() == DialogResult.OK)
+            using (var saveDialog = new SaveFileDialog())
             {
-                using(FileStream fs = File.Create(saveDialog.FileName))
+                saveDialog.Filter = "Text files (*.txt)|*.txt";
+                saveDialog.FilterIndex = 1;
+
+                if (saveDialog.ShowDialog() == DialogResult.OK)
                 {
-                    Byte[] info = new UTF8Encoding(true).GetBytes("Write your new hashtags here, separated by a line break");
-                    fs.Write(info, 0, info.Length);
+                    using (FileStream fs = File.Create(saveDialog.FileName))
+                    {
+                        Byte[] info = new UTF8Encoding(true).GetBytes("Write your new hashtags here, separated by a line break");
+                        fs.Write(info, 0, info.Length);
+                    }
+
+                    string newFileName = Path.GetFileName(saveDialog.FileName);
+                    string newDirectory = Path.GetDirectoryName(saveDialog.FileName);
+
+                    CurrentFilePath = newDirectory;
+
+                    // Refresh the list of files after the save
+                    this.files = DataLoader.LoadFilesFromDirectory(CurrentFilePath);
+
+                    RefreshComboBoxes();
+
+                    SetCombosToNewFile(newFileName);
                 }
-                //TODO Use CurrentFilePath instead
-                RefreshComboBoxes(saveDialog.InitialDirectory);
             }
         }
 
-        private void RefreshComboBoxes(string directory)
+        private void RefreshComboBoxes()
         {
-            this.files = DataLoader.LoadFilesFromDirectory(directory);
+            selectedDirectoryLabel.Text = this.CurrentFilePath;
 
-            if (this.files.Length > 0)
-            {                 selectedDirectoryLabel.Text = directory;
+            // Refresh combo boxes with the files in the new directory
+            CatSelectorGen.PopulateCategories(this.files);
+            CatSelectorManage.PopulateCategories(this.files);
 
-                CatSelectorGen.PopulateCategories(this.files);
-                CatSelectorManage.PopulateCategories(this.files);
+            CatSelectorGen.ResetCombo();
+            CatSelectorManage.ResetCombo();
+        }
 
-                CatSelectorGen.ResetCombo();
-                CatSelectorManage.ResetCombo();       
+        private void SetCombosToNewFile(string newFileName)
+        {
+            CatSelectorGen.SetSelectedIndex(newFileName);
+            CatSelectorManage.SetSelectedIndex(newFileName);
+        }
+
+        private void RemoveCategoryButton_Click(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrEmpty(this.CurrentFilePath))
+            {
+                DeleteSelectedFile();
             }
+        }
+
+        private void DeleteSelectedFile()
+        {
+            DialogResult result = MessageBox.Show("Do you really want to delete the selected file?", "Delete File", MessageBoxButtons.OKCancel);
+
+            if (result == DialogResult.OK)
+            {
+                var file = CatSelectorManage.SelectedValue.FullName;
+
+                File.Delete(file);
+
+                this.files = DataLoader.LoadFilesFromDirectory(CurrentFilePath);
+
+                RefreshComboBoxes();
+            }
+        }
+
+        private void UpdateSelectedFile()
+        {
+            DialogResult result = MessageBox.Show("Commit changes to current file?", "Update File", MessageBoxButtons.OKCancel);
+
+            if (result == DialogResult.OK)
+            {
+                FileStream fs = null;
+                try
+                {
+                    fs = new FileStream(this.CatSelectorManage.SelectedValue.FullName, FileMode.Truncate);
+
+                    using (StreamWriter writer = new StreamWriter(fs))
+                    {
+                        writer.Write(this.editorTextBox.Text);
+                    }
+                }
+                finally
+                {
+                    if (fs != null)
+                    {
+                        fs.Dispose();
+                    }
+                }
+
+            }
+        }
+
+        private void SaveChangesButton_Click(object sender, EventArgs e)
+        {
+            UpdateSelectedFile();
         }
     }
 }

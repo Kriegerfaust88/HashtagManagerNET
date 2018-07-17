@@ -246,6 +246,7 @@
             this.saveChangesButton.TabIndex = 5;
             this.saveChangesButton.Text = "Save Changes";
             this.saveChangesButton.UseVisualStyleBackColor = true;
+            this.saveChangesButton.Click += new System.EventHandler(this.SaveChangesButton_Click);
             // 
             // editorTextBox
             // 
@@ -264,6 +265,7 @@
             this.removeCategoryButton.TabIndex = 3;
             this.removeCategoryButton.Text = "-";
             this.removeCategoryButton.UseVisualStyleBackColor = true;
+            this.removeCategoryButton.Click += new System.EventHandler(this.RemoveCategoryButton_Click);
             // 
             // addCategoryButton
             // 
@@ -273,7 +275,7 @@
             this.addCategoryButton.TabIndex = 2;
             this.addCategoryButton.Text = "+";
             this.addCategoryButton.UseVisualStyleBackColor = true;
-            this.addCategoryButton.Click += new System.EventHandler(this.addCategoryButton_Click);
+            this.addCategoryButton.Click += new System.EventHandler(this.AddCategoryButton_Click);
             // 
             // MainForm
             // 

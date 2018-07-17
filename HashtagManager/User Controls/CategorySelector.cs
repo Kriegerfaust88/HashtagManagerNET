@@ -54,6 +54,24 @@ namespace HashtagManager
                 this.CategoryCombo.ResetText();
             }
         }
+
+        public void SetSelectedIndex(string indexValue)
+        {
+            FileInfo[] files = (FileInfo[])this.CategoryCombo.DataSource;
+
+            for(int i = 0; i < files.Length; i++)
+            {
+                if (files[i].Name == indexValue)
+                {
+                    this.CategoryCombo.SelectedIndex = i;
+                }
+            }
+        }
+
+        public void ClearDataBindings()
+        {
+            this.CategoryCombo.DataSource = null;
+        }
     }
 
     public class CategoryChangedEventArgs : EventArgs
